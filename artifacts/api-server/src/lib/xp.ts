@@ -32,7 +32,7 @@ export function rollLoot(count: number = 1): Array<{ name: string; description: 
 }
 
 export async function awardXP(
-  userId: number,
+  userId: string,
   xpGained: number,
   description: string,
   activityType: string,

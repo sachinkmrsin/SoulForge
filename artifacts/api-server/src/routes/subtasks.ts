@@ -21,14 +21,14 @@ function formatSubtask(s: typeof subtasks.$inferSelect) {
 
 router.get("/", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const goalId = parseInt(req.params.goalId);
+  const goalId = req.params.goalId as string;
   const subs = await db.select().from(subtasks).where(and(eq(subtasks.goalId, goalId), eq(subtasks.userId, user.id)));
   res.json(subs.map(formatSubtask));
 });
 
 router.post("/", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const goalId = parseInt(req.params.goalId);
+  const goalId = req.params.goalId as string;
   const { title, xpReward = 25 } = req.body;
   if (!title) {
     res.status(400).json({ error: "Title required" });
@@ -39,7 +39,7 @@ router.post("/", requireAuth, async (req, res) => {
 });
 
 router.patch("/:subtaskId", requireAuth, async (req, res) => {
-  const subtaskId = parseInt(req.params.subtaskId);
+  const subtaskId = req.params.subtaskId as string;
   const { title, completed } = req.body;
   const [updated] = await db
     .update(subtasks)
@@ -53,14 +53,14 @@ router.patch("/:subtaskId", requireAuth, async (req, res) => {
 });
 
 router.delete("/:subtaskId", requireAuth, async (req, res) => {
-  const subtaskId = parseInt(req.params.subtaskId);
+  const subtaskId = req.params.subtaskId as string;
   await db.delete(subtasks).where(eq(subtasks.id, subtaskId));
   res.json({ message: "Subtask deleted" });
 });
 
 router.post("/:subtaskId/complete", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const subtaskId = parseInt(req.params.subtaskId);
+  const subtaskId = req.params.subtaskId as string;
   const [sub] = await db.select().from(subtasks).where(eq(subtasks.id, subtaskId));
   if (!sub || sub.completed) {
     res.status(400).json({ error: "Subtask not found or already completed" });

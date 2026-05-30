@@ -1,29 +1,20 @@
 import { Router } from "express";
 import { db, players, skillDefinitions } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
 import { xpForLevel } from "../lib/xp";
 
 const router = Router();
-
-const SKILLS_CATALOG = [
-  { name: "Soul Link", description: "Your completed tasks deal 10% more damage to bosses.", effect: "boss_damage_+10%", levelRequired: 1 },
-  { name: "Iron Will", description: "Habit streaks now give double XP bonus.", effect: "streak_xp_x2", levelRequired: 3 },
-  { name: "Ember Ward", description: "Once per day, gain 20% more XP from any action.", effect: "xp_boost_daily", levelRequired: 5 },
-  { name: "Cursed Focus", description: "Legendary goals award 50% more XP.", effect: "legendary_xp_+50%", levelRequired: 8 },
-  { name: "Undead Resolve", description: "Never lose your habit streak on missed days.", effect: "streak_preserve", levelRequired: 10 },
-  { name: "Dark Covenant", description: "All boss loot has improved rarity.", effect: "loot_rarity_up", levelRequired: 12 },
-  { name: "Estus Surge", description: "Complete 5 habits in a day to gain a full HP restore.", effect: "hp_restore_5habits", levelRequired: 15 },
-  { name: "Soul Ascension", description: "Gain a free daily challenge every week.", effect: "free_challenge_weekly", levelRequired: 20 },
-];
 
 router.get("/", requireAuth, async (req, res) => {
   const user = (req as any).user;
   const [player] = await db.select().from(players).where(eq(players.userId, user.id));
   const equipped: string[] = JSON.parse(player?.equippedSkills || "[]");
 
-  const skills = SKILLS_CATALOG.map((s, i) => ({
-    id: i + 1,
+  const dbSkills = await db.select().from(skillDefinitions).orderBy(asc(skillDefinitions.levelRequired), asc(skillDefinitions.id));
+
+  const skills = dbSkills.map((s) => ({
+    id: s.id,
     name: s.name,
     description: s.description,
     effect: s.effect,
@@ -37,8 +28,8 @@ router.get("/", requireAuth, async (req, res) => {
 
 router.post("/:skillId/equip", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const skillId = parseInt(req.params.skillId) - 1;
-  const skill = SKILLS_CATALOG[skillId];
+  const skillId = req.params.skillId as string;
+  const [skill] = await db.select().from(skillDefinitions).where(eq(skillDefinitions.id, skillId));
   if (!skill) {
     res.status(404).json({ error: "Skill not found" });
     return;
@@ -67,8 +58,8 @@ router.post("/:skillId/equip", requireAuth, async (req, res) => {
 
 router.delete("/:skillId/equip", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const skillId = parseInt(req.params.skillId) - 1;
-  const skill = SKILLS_CATALOG[skillId];
+  const skillId = req.params.skillId as string;
+  const [skill] = await db.select().from(skillDefinitions).where(eq(skillDefinitions.id, skillId));
   if (!skill) {
     res.status(404).json({ error: "Skill not found" });
     return;

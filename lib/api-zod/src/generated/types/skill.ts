@@ -7,7 +7,7 @@
  */
 
 export interface Skill {
-  id: number;
+  id: string;
   name: string;
   description: string;
   effect: string;

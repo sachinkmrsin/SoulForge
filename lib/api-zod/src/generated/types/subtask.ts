@@ -7,9 +7,9 @@
  */
 
 export interface Subtask {
-  id: number;
-  goalId: number;
-  userId: number;
+  id: string;
+  goalId: string;
+  userId: string;
   title: string;
   completed: boolean;
   xpReward: number;

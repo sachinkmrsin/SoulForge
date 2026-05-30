@@ -1,13 +1,13 @@
-import { pgTable, text, serial, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { users } from "./users";
 import { goals } from "./goals";
 
 export const challenges = pgTable("challenges", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  goalId: integer("goal_id").references(() => goals.id, { onDelete: "set null" }),
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  goalId: uuid("goal_id").references(() => goals.id, { onDelete: "set null" }),
   title: text("title").notNull(),
   description: text("description").notNull().default(""),
   duration: text("duration").notNull().default("daily"),

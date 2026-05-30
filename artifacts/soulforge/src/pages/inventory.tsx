@@ -36,8 +36,8 @@ export function Inventory() {
   const discardItem = useDiscardItem();
   const queryClient = useQueryClient();
 
-  const handleDiscard = async (id: number) => {
-    await discardItem.mutateAsync({ id });
+  const handleDiscard = async (id: string) => {
+    await discardItem.mutateAsync({ itemId: id });
     queryClient.invalidateQueries({ queryKey: getListInventoryQueryKey() });
   };
 

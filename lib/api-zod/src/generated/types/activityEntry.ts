@@ -7,7 +7,7 @@
  */
 
 export interface ActivityEntry {
-  id: number;
+  id: string;
   type: string;
   description: string;
   xpGained: number;

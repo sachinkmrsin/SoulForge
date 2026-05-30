@@ -10,8 +10,8 @@ import type { GoalWithSubtasksStatus } from './goalWithSubtasksStatus';
 import type { Subtask } from './subtask';
 
 export interface GoalWithSubtasks {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   title: string;
   /** @nullable */
   description: string | null;

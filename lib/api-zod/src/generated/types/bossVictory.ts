@@ -8,7 +8,7 @@
 import type { Boss } from './boss';
 
 export interface BossVictory {
-  id: number;
+  id: string;
   boss: Boss;
   defeatedAt: string;
   xpEarned: number;

@@ -28,7 +28,7 @@ router.post("/register", async (req, res) => {
 
   const token = generateToken(user.id);
   res.status(201).json({
-    user: { id: user.id, username: user.username, createdAt: user.createdAt.toISOString(), isPro: user.isPro },
+    user: { id: user.id, username: user.username, role: user.role, createdAt: user.createdAt.toISOString(), isPro: user.isPro },
     token,
   });
 });
@@ -49,7 +49,7 @@ router.post("/login", async (req, res) => {
 
   const token = generateToken(user.id);
   res.json({
-    user: { id: user.id, username: user.username, createdAt: user.createdAt.toISOString(), isPro: user.isPro },
+    user: { id: user.id, username: user.username, role: user.role, createdAt: user.createdAt.toISOString(), isPro: user.isPro },
     token,
   });
 });
@@ -60,7 +60,7 @@ router.post("/logout", (_req, res) => {
 
 router.get("/me", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  res.json({ id: user.id, username: user.username, createdAt: user.createdAt.toISOString(), isPro: user.isPro });
+  res.json({ id: user.id, username: user.username, role: user.role, createdAt: user.createdAt.toISOString(), isPro: user.isPro });
 });
 
 export default router;

@@ -84,7 +84,7 @@ Make the challenges feel like Dark Souls — demanding but achievable. Use dark 
 });
 
 router.patch("/:challengeId", requireAuth, async (req, res) => {
-  const challengeId = parseInt(req.params.challengeId);
+  const challengeId = req.params.challengeId as string;
   const { status } = req.body;
   const [updated] = await db
     .update(challenges)
@@ -96,7 +96,7 @@ router.patch("/:challengeId", requireAuth, async (req, res) => {
 
 router.post("/:challengeId/complete", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const challengeId = parseInt(req.params.challengeId);
+  const challengeId = req.params.challengeId as string;
   const [challenge] = await db.select().from(challenges).where(and(eq(challenges.id, challengeId), eq(challenges.userId, user.id)));
   if (!challenge || challenge.status === "completed") {
     res.status(400).json({ error: "Challenge not found or already completed" });

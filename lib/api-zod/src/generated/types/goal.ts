@@ -9,8 +9,8 @@ import type { GoalPriority } from './goalPriority';
 import type { GoalStatus } from './goalStatus';
 
 export interface Goal {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   title: string;
   /** @nullable */
   description: string | null;

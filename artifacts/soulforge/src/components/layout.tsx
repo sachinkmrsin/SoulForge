@@ -5,13 +5,13 @@ import { useLogout } from '@workspace/api-client-react';
 import { 
   Flame, Shield, Swords, CheckSquare, Target, 
   Trophy, Skull, Backpack, Sparkles, Calendar, 
-  User, LogOut, Menu
+  User, LogOut, Menu, ShieldCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const { logout: clearAuth } = useAuth();
+  const { logout: clearAuth, user } = useAuth();
   const logoutMutation = useLogout();
   const [location] = useLocation();
 
@@ -56,7 +56,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           );
         })}
       </nav>
-      <div className="p-4 mt-auto">
+      <div className="p-4 mt-auto space-y-2">
+        {user?.role === 'admin' && (
+          <Link href="/admin" className={`flex items-center gap-3 px-4 py-3 rounded-none transition-colors text-destructive hover:bg-destructive/10`}>
+            <ShieldCheck className="w-5 h-5" />
+            <span className="font-serif">Admin Panel</span>
+          </Link>
+        )}
         <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={handleLogout}>
           <LogOut className="w-5 h-5 mr-3" />
           Abandon Run

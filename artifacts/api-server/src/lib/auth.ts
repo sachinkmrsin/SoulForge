@@ -7,13 +7,13 @@ export function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password + process.env.SESSION_SECRET).digest("hex");
 }
 
-export function generateToken(userId: number): string {
+export function generateToken(userId: string): string {
   const payload = JSON.stringify({ userId, exp: Date.now() + 7 * 24 * 60 * 60 * 1000 });
   const sig = crypto.createHmac("sha256", process.env.SESSION_SECRET || "secret").update(payload).digest("hex");
   return Buffer.from(payload).toString("base64url") + "." + sig;
 }
 
-export function verifyToken(token: string): { userId: number } | null {
+export function verifyToken(token: string): { userId: string } | null {
   try {
     const [payloadB64, sig] = token.split(".");
     if (!payloadB64 || !sig) return null;
@@ -46,5 +46,14 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     return;
   }
   (req as any).user = user;
+  next();
+}
+
+export async function requireAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const user = (req as any).user;
+  if (!user || user.role !== "admin") {
+    res.status(403).json({ error: "Forbidden: admin access required" });
+    return;
+  }
   next();
 }

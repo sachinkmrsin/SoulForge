@@ -7,8 +7,8 @@
  */
 
 export interface Player {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   username: string;
   level: number;
   xp: number;

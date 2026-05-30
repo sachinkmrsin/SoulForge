@@ -12,8 +12,8 @@ export function Challenges() {
   const completeChallenge = useCompleteChallenge();
   const queryClient = useQueryClient();
 
-  const handleComplete = async (id: number) => {
-    await completeChallenge.mutateAsync({ id });
+  const handleComplete = async (id: string) => {
+    await completeChallenge.mutateAsync({ challengeId: id });
     queryClient.invalidateQueries({ queryKey: getListChallengesQueryKey() });
     queryClient.invalidateQueries({ queryKey: getGetDashboardSummaryQueryKey() });
   };

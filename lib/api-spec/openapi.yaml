@@ -33,6 +33,8 @@ tags:
     description: Player leaderboard
   - name: dashboard
     description: Dashboard summary
+  - name: admin
+    description: Admin panel operations
 
 paths:
   /healthz:
@@ -224,7 +226,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Goal
@@ -247,7 +250,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -270,7 +274,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Deleted
@@ -289,7 +294,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Completed goal with XP gained
@@ -309,7 +315,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of subtasks
@@ -328,7 +335,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -353,12 +361,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: subtaskId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -381,12 +391,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: subtaskId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Deleted
@@ -405,12 +417,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: subtaskId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: XP and boss damage result
@@ -462,7 +476,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -485,7 +500,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Deleted
@@ -504,7 +520,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Checkin result with XP
@@ -603,7 +620,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Boss battle started
@@ -659,7 +677,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -684,7 +703,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: XP result
@@ -719,7 +739,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Discarded
@@ -754,7 +775,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Updated player
@@ -771,7 +793,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Updated player
@@ -854,6 +877,363 @@ paths:
               schema:
                 $ref: "#/components/schemas/LeaderboardResponse"
 
+  # ADMIN
+  /admin/dashboard:
+    get:
+      operationId: adminGetDashboard
+      tags: [admin]
+      summary: Get admin dashboard stats
+      responses:
+        "200":
+          description: Admin dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminDashboard"
+
+  /admin/users:
+    get:
+      operationId: adminListUsers
+      tags: [admin]
+      summary: List all users with pagination
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: role
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Paginated user list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUserList"
+
+  /admin/users/{userId}:
+    get:
+      operationId: adminGetUser
+      tags: [admin]
+      summary: Get user details with player profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUserDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: adminUpdateUser
+      tags: [admin]
+      summary: Update user (role, isPro, username)
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+    delete:
+      operationId: adminDeleteUser
+      tags: [admin]
+      summary: Delete a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/users/{userId}/player:
+    patch:
+      operationId: adminUpdatePlayer
+      tags: [admin]
+      summary: Edit player stats
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminPlayerUpdate"
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+
+  /admin/bosses:
+    get:
+      operationId: adminListBosses
+      tags: [admin]
+      summary: List all bosses
+      responses:
+        "200":
+          description: Boss list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Boss"
+    post:
+      operationId: adminCreateBoss
+      tags: [admin]
+      summary: Create a boss
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminBossInput"
+      responses:
+        "201":
+          description: Created boss
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boss"
+
+  /admin/bosses/{bossId}:
+    patch:
+      operationId: adminUpdateBoss
+      tags: [admin]
+      summary: Update a boss
+      parameters:
+        - name: bossId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminBossInput"
+      responses:
+        "200":
+          description: Updated boss
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boss"
+    delete:
+      operationId: adminDeleteBoss
+      tags: [admin]
+      summary: Delete a boss
+      parameters:
+        - name: bossId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/skills:
+    get:
+      operationId: adminListSkills
+      tags: [admin]
+      summary: List all skill definitions
+      responses:
+        "200":
+          description: Skills list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SkillDefinition"
+    post:
+      operationId: adminCreateSkill
+      tags: [admin]
+      summary: Create a skill definition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SkillDefinitionInput"
+      responses:
+        "201":
+          description: Created skill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillDefinition"
+
+  /admin/skills/{skillId}:
+    patch:
+      operationId: adminUpdateSkill
+      tags: [admin]
+      summary: Update a skill definition
+      parameters:
+        - name: skillId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SkillDefinitionInput"
+      responses:
+        "200":
+          description: Updated skill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillDefinition"
+    delete:
+      operationId: adminDeleteSkill
+      tags: [admin]
+      summary: Delete a skill definition
+      parameters:
+        - name: skillId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/items:
+    get:
+      operationId: adminListItems
+      tags: [admin]
+      summary: List all inventory items
+      parameters:
+        - name: rarity
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Paginated item list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminItemList"
+    post:
+      operationId: adminCreateItem
+      tags: [admin]
+      summary: Grant an item to a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminItemInput"
+      responses:
+        "201":
+          description: Created item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+
+  /admin/items/{itemId}:
+    delete:
+      operationId: adminDeleteItem
+      tags: [admin]
+      summary: Delete an inventory item
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -891,12 +1271,16 @@ components:
 
     User:
       type: object
-      required: [id, username, createdAt, isPro]
+      required: [id, username, role, createdAt, isPro]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         username:
           type: string
+        role:
+          type: string
+          enum: [user, admin, moderator]
         createdAt:
           type: string
         isPro:
@@ -917,9 +1301,11 @@ components:
       required: [id, userId, username, level, xp, xpToNextLevel, hp, maxHp, gold, strength, endurance, dexterity, faith, avatarClass, equippedSkills, createdAt]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         username:
           type: string
         level:
@@ -988,9 +1374,11 @@ components:
       required: [id, userId, title, description, status, priority, xpReward, deadline, createdAt, completedAt, subtaskCount, completedSubtaskCount]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         title:
           type: string
         description:
@@ -1019,9 +1407,11 @@ components:
       required: [id, userId, title, description, status, priority, xpReward, deadline, createdAt, completedAt, subtasks]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         title:
           type: string
         description:
@@ -1084,11 +1474,14 @@ components:
       required: [id, goalId, userId, title, completed, xpReward, createdAt, completedAt]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         goalId:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         title:
           type: string
         completed:
@@ -1124,9 +1517,11 @@ components:
       required: [id, userId, title, description, frequency, timeOfDay, xpReward, streak, lastCheckin, createdAt, completedToday]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         title:
           type: string
         description:
@@ -1188,7 +1583,8 @@ components:
       required: [id, name, description, difficulty, maxHp, xpReward, goldReward, lootTable, imageUrl, isCustom, createdAt]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         name:
           type: string
         description:
@@ -1237,9 +1633,11 @@ components:
       required: [id, userId, boss, currentHp, startedAt, attackPoints]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         boss:
           $ref: "#/components/schemas/Boss"
         currentHp:
@@ -1273,7 +1671,8 @@ components:
       required: [id, boss, defeatedAt, xpEarned, goldEarned]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         boss:
           $ref: "#/components/schemas/Boss"
         defeatedAt:
@@ -1289,11 +1688,14 @@ components:
       required: [id, userId, goalId, title, description, duration, difficulty, xpReward, status, createdAt, completedAt]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         goalId:
-          type: ["integer", "null"]
+          type: ["string", "null"]
+          format: uuid
         title:
           type: string
         description:
@@ -1319,7 +1721,8 @@ components:
       required: [goalId, duration]
       properties:
         goalId:
-          type: integer
+          type: string
+          format: uuid
         duration:
           type: string
           enum: [daily, weekly, monthly]
@@ -1339,9 +1742,11 @@ components:
       required: [id, userId, name, description, rarity, type, obtainedAt]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         userId:
-          type: integer
+          type: string
+          format: uuid
         name:
           type: string
         description:
@@ -1361,7 +1766,8 @@ components:
       required: [id, name, description, effect, levelRequired, isEquipped, isUnlocked]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         name:
           type: string
         description:
@@ -1426,7 +1832,8 @@ components:
       required: [id, type, description, xpGained, timestamp]
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         type:
           type: string
         description:
@@ -1473,3 +1880,327 @@ components:
               type: integer
             avatarClass:
               type: string
+
+    # ADMIN
+    SkillDefinition:
+      type: object
+      required: [id, name, description, effect, levelRequired]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        effect:
+          type: string
+        levelRequired:
+          type: integer
+
+    SkillDefinitionInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        effect:
+          type: string
+        levelRequired:
+          type: integer
+
+    AdminUser:
+      type: object
+      required: [id, username, role, isPro, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        role:
+          type: string
+          enum: [user, admin, moderator]
+        isPro:
+          type: boolean
+        createdAt:
+          type: string
+
+    AdminUserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+        role:
+          type: string
+          enum: [user, admin, moderator]
+        isPro:
+          type: boolean
+
+    AdminPlayerUpdate:
+      type: object
+      properties:
+        level:
+          type: integer
+        xp:
+          type: integer
+        hp:
+          type: integer
+        maxHp:
+          type: integer
+        gold:
+          type: integer
+        strength:
+          type: integer
+        endurance:
+          type: integer
+        dexterity:
+          type: integer
+        faith:
+          type: integer
+        avatarClass:
+          type: string
+        equippedSkills:
+          type: array
+          items:
+            type: string
+
+    AdminBossInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard, legendary]
+        maxHp:
+          type: integer
+        xpReward:
+          type: integer
+        goldReward:
+          type: integer
+        lootTable:
+          type: array
+          items:
+            type: string
+        imageUrl:
+          type: ["string", "null"]
+        isCustom:
+          type: boolean
+
+    AdminItemInput:
+      type: object
+      required: [userId, name]
+      properties:
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        rarity:
+          type: string
+          enum: [common, uncommon, rare, epic, legendary]
+        type:
+          type: string
+          enum: [weapon, armor, accessory, consumable, trophy]
+
+    AdminDashboardStats:
+      type: object
+      required: [totalUsers, totalPlayers, totalGoals, totalHabits, totalBosses, totalItems, totalSkills, totalChallenges, activeBattles]
+      properties:
+        totalUsers:
+          type: integer
+        totalPlayers:
+          type: integer
+        totalGoals:
+          type: integer
+        totalHabits:
+          type: integer
+        totalBosses:
+          type: integer
+        totalItems:
+          type: integer
+        totalSkills:
+          type: integer
+        totalChallenges:
+          type: integer
+        activeBattles:
+          type: integer
+
+    AdminDashboard:
+      type: object
+      required: [stats, recentUsers, recentActivity]
+      properties:
+        stats:
+          $ref: "#/components/schemas/AdminDashboardStats"
+        recentUsers:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminUser"
+        recentActivity:
+          type: array
+          items:
+            type: object
+            required: [id, type, description, xpGained, timestamp, username]
+            properties:
+              id:
+                type: string
+                format: uuid
+              type:
+                type: string
+              description:
+                type: string
+              xpGained:
+                type: integer
+              timestamp:
+                type: string
+              username:
+                type: string
+
+    Pagination:
+      type: object
+      required: [page, limit, total, totalPages]
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+
+    AdminUserListEntry:
+      type: object
+      required: [id, username, role, isPro, createdAt, level, xp, gold, avatarClass]
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        role:
+          type: string
+          enum: [user, admin, moderator]
+        isPro:
+          type: boolean
+        createdAt:
+          type: string
+        level:
+          type: integer
+        xp:
+          type: integer
+        gold:
+          type: integer
+        avatarClass:
+          type: string
+
+    AdminUserList:
+      type: object
+      required: [users, pagination]
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminUserListEntry"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+    AdminUserDetail:
+      type: object
+      required: [user, player, goals, habits, items, activity]
+      properties:
+        user:
+          $ref: "#/components/schemas/AdminUser"
+        player:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+              format: uuid
+            userId:
+              type: string
+              format: uuid
+            level:
+              type: integer
+            xp:
+              type: integer
+            hp:
+              type: integer
+            maxHp:
+              type: integer
+            gold:
+              type: integer
+            strength:
+              type: integer
+            endurance:
+              type: integer
+            dexterity:
+              type: integer
+            faith:
+              type: integer
+            avatarClass:
+              type: string
+            equippedSkills:
+              type: array
+              items:
+                type: string
+            createdAt:
+              type: string
+        goals:
+          type: array
+          items:
+            type: object
+        habits:
+          type: array
+          items:
+            type: object
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/InventoryItem"
+        activity:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityEntry"
+
+    AdminItemEntry:
+      type: object
+      required: [id, userId, name, description, rarity, type, obtainedAt, username]
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        rarity:
+          type: string
+        type:
+          type: string
+        obtainedAt:
+          type: string
+        username:
+          type: string
+
+    AdminItemList:
+      type: object
+      required: [items, pagination]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminItemEntry"
+        pagination:
+          $ref: "#/components/schemas/Pagination"

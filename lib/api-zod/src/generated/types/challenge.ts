@@ -10,10 +10,10 @@ import type { ChallengeDuration } from './challengeDuration';
 import type { ChallengeStatus } from './challengeStatus';
 
 export interface Challenge {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   /** @nullable */
-  goalId: number | null;
+  goalId: string | null;
   title: string;
   description: string;
   duration: ChallengeDuration;

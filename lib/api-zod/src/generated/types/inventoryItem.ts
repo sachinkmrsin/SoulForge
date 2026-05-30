@@ -9,8 +9,8 @@ import type { InventoryItemRarity } from './inventoryItemRarity';
 import type { InventoryItemType } from './inventoryItemType';
 
 export interface InventoryItem {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   name: string;
   description: string;
   rarity: InventoryItemRarity;

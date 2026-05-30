@@ -9,8 +9,8 @@ import type { HabitFrequency } from './habitFrequency';
 import type { HabitTimeOfDay } from './habitTimeOfDay';
 
 export interface Habit {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   title: string;
   /** @nullable */
   description: string | null;

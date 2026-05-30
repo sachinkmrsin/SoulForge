@@ -12,6 +12,7 @@ import skillsRouter from "./skills";
 import calendarRouter from "./calendar";
 import dashboardRouter from "./dashboard";
 import leaderboardRouter from "./leaderboard";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -28,5 +29,6 @@ router.use("/skills", skillsRouter);
 router.use("/calendar", calendarRouter);
 router.use("/dashboard", dashboardRouter);
 router.use("/leaderboard", leaderboardRouter);
+router.use("/admin", adminRouter);
 
 export default router;

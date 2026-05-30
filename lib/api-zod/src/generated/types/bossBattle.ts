@@ -8,8 +8,8 @@
 import type { Boss } from './boss';
 
 export interface BossBattle {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   boss: Boss;
   currentHp: number;
   startedAt: string;

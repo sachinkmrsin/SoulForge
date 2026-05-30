@@ -21,7 +21,7 @@ router.get("/", requireAuth, async (req, res) => {
 
 router.delete("/:itemId", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const itemId = parseInt(req.params.itemId);
+  const itemId = req.params.itemId as string;
   await db.delete(inventoryItems).where(and(eq(inventoryItems.id, itemId), eq(inventoryItems.userId, user.id)));
   res.json({ message: "Item discarded" });
 });

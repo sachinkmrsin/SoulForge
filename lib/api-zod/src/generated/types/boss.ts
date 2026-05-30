@@ -8,7 +8,7 @@
 import type { BossDifficulty } from './bossDifficulty';
 
 export interface Boss {
-  id: number;
+  id: string;
   name: string;
   description: string;
   difficulty: BossDifficulty;

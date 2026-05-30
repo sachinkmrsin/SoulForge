@@ -5,10 +5,12 @@
  * SoulForge API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { UserRole } from './userRole';
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
+  role: UserRole;
   createdAt: string;
   isPro: boolean;
 }

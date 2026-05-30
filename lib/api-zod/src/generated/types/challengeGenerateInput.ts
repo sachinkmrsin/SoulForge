@@ -8,7 +8,7 @@
 import type { ChallengeGenerateInputDuration } from './challengeGenerateInputDuration';
 
 export interface ChallengeGenerateInput {
-  goalId: number;
+  goalId: string;
   duration: ChallengeGenerateInputDuration;
   count?: number;
 }

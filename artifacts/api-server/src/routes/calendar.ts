@@ -81,7 +81,7 @@ router.get("/", requireAuth, async (req, res) => {
 
 router.get("/:date", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const dateStr = req.params.date;
+  const dateStr = req.params.date as string;
   const parsed = new Date(dateStr);
   if (isNaN(parsed.getTime())) {
     res.status(400).json({ error: "Invalid date" });

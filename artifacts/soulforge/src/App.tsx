@@ -17,6 +17,11 @@ import { Skills } from "@/pages/skills";
 import { Calendar } from "@/pages/calendar";
 import { Profile } from "@/pages/profile";
 import { Leaderboard } from "@/pages/leaderboard";
+import { AdminDashboard } from "@/pages/admin/dashboard";
+import { AdminUsers } from "@/pages/admin/users";
+import { AdminBosses } from "@/pages/admin/bosses";
+import { AdminSkills } from "@/pages/admin/skills";
+import { AdminItems } from "@/pages/admin/items";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +34,26 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   
   if (!token) {
     window.location.href = '/login';
+    return null;
+  }
+  
+  return <Component />;
+}
+
+function AdminProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+  const { token, user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center text-primary font-serif uppercase tracking-widest">Loading...</div>;
+  }
+  
+  if (!token) {
+    window.location.href = '/login';
+    return null;
+  }
+
+  if (user?.role !== 'admin') {
+    window.location.href = '/dashboard';
     return null;
   }
   
@@ -52,6 +77,12 @@ function Router() {
       <Route path="/leaderboard"><ProtectedRoute component={Leaderboard} /></Route>
       <Route path="/calendar"><ProtectedRoute component={Calendar} /></Route>
       <Route path="/profile"><ProtectedRoute component={Profile} /></Route>
+
+      <Route path="/admin"><AdminProtectedRoute component={AdminDashboard} /></Route>
+      <Route path="/admin/users"><AdminProtectedRoute component={AdminUsers} /></Route>
+      <Route path="/admin/bosses"><AdminProtectedRoute component={AdminBosses} /></Route>
+      <Route path="/admin/skills"><AdminProtectedRoute component={AdminSkills} /></Route>
+      <Route path="/admin/items"><AdminProtectedRoute component={AdminItems} /></Route>
       
       <Route component={NotFound} />
     </Switch>

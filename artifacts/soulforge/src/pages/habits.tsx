@@ -26,11 +26,11 @@ export function Habits() {
     queryClient.invalidateQueries({ queryKey: getListHabitsQueryKey() });
   };
 
-  const [animatingId, setAnimatingId] = useState<number | null>(null);
+  const [animatingId, setAnimatingId] = useState<string | null>(null);
 
-  const handleCheckin = async (id: number) => {
+  const handleCheckin = async (id: string) => {
     setAnimatingId(id);
-    await checkinHabit.mutateAsync({ id });
+    await checkinHabit.mutateAsync({ habitId: id });
     queryClient.invalidateQueries({ queryKey: getListHabitsQueryKey() });
     queryClient.invalidateQueries({ queryKey: getGetDashboardSummaryQueryKey() });
     setTimeout(() => setAnimatingId(null), 1000);

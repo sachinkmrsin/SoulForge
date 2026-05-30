@@ -24,9 +24,19 @@ export interface AuthInput {
   password: string;
 }
 
+export type UserRole = typeof UserRole[keyof typeof UserRole];
+
+
+export const UserRole = {
+  user: 'user',
+  admin: 'admin',
+  moderator: 'moderator',
+} as const;
+
 export interface User {
-  id: number;
+  id: string;
   username: string;
+  role: UserRole;
   createdAt: string;
   isPro: boolean;
 }
@@ -37,8 +47,8 @@ export interface AuthResponse {
 }
 
 export interface Player {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   username: string;
   level: number;
   xp: number;
@@ -86,8 +96,8 @@ export const InventoryItemType = {
 } as const;
 
 export interface InventoryItem {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   name: string;
   description: string;
   rarity: InventoryItemRarity;
@@ -124,8 +134,8 @@ export const GoalPriority = {
 } as const;
 
 export interface Goal {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   title: string;
   /** @nullable */
   description: string | null;
@@ -161,9 +171,9 @@ export const GoalWithSubtasksPriority = {
 } as const;
 
 export interface Subtask {
-  id: number;
-  goalId: number;
-  userId: number;
+  id: string;
+  goalId: string;
+  userId: string;
   title: string;
   completed: boolean;
   xpReward: number;
@@ -173,8 +183,8 @@ export interface Subtask {
 }
 
 export interface GoalWithSubtasks {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   title: string;
   /** @nullable */
   description: string | null;
@@ -265,8 +275,8 @@ export const HabitTimeOfDay = {
 } as const;
 
 export interface Habit {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   title: string;
   /** @nullable */
   description: string | null;
@@ -344,7 +354,7 @@ export const BossDifficulty = {
 } as const;
 
 export interface Boss {
-  id: number;
+  id: string;
   name: string;
   description: string;
   difficulty: BossDifficulty;
@@ -379,8 +389,8 @@ export interface BossInput {
 }
 
 export interface BossBattle {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   boss: Boss;
   currentHp: number;
   startedAt: string;
@@ -397,7 +407,7 @@ export interface AttackResult {
 }
 
 export interface BossVictory {
-  id: number;
+  id: string;
   boss: Boss;
   defeatedAt: string;
   xpEarned: number;
@@ -433,10 +443,10 @@ export const ChallengeStatus = {
 } as const;
 
 export interface Challenge {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   /** @nullable */
-  goalId: number | null;
+  goalId: string | null;
   title: string;
   description: string;
   duration: ChallengeDuration;
@@ -458,7 +468,7 @@ export const ChallengeGenerateInputDuration = {
 } as const;
 
 export interface ChallengeGenerateInput {
-  goalId: number;
+  goalId: string;
   duration: ChallengeGenerateInputDuration;
   count?: number;
 }
@@ -477,7 +487,7 @@ export interface ChallengeUpdate {
 }
 
 export interface Skill {
-  id: number;
+  id: string;
   name: string;
   description: string;
   effect: string;
@@ -496,7 +506,7 @@ export interface CalendarDay {
 }
 
 export interface ActivityEntry {
-  id: number;
+  id: string;
   type: string;
   description: string;
   xpGained: number;
@@ -541,8 +551,246 @@ export interface LeaderboardResponse {
   currentRank: LeaderboardResponseCurrentRank;
 }
 
+export interface SkillDefinition {
+  id: string;
+  name: string;
+  description: string;
+  effect: string;
+  levelRequired: number;
+}
+
+export interface SkillDefinitionInput {
+  name: string;
+  description?: string;
+  effect?: string;
+  levelRequired?: number;
+}
+
+export type AdminUserRole = typeof AdminUserRole[keyof typeof AdminUserRole];
+
+
+export const AdminUserRole = {
+  user: 'user',
+  admin: 'admin',
+  moderator: 'moderator',
+} as const;
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  role: AdminUserRole;
+  isPro: boolean;
+  createdAt: string;
+}
+
+export type AdminUserUpdateRole = typeof AdminUserUpdateRole[keyof typeof AdminUserUpdateRole];
+
+
+export const AdminUserUpdateRole = {
+  user: 'user',
+  admin: 'admin',
+  moderator: 'moderator',
+} as const;
+
+export interface AdminUserUpdate {
+  username?: string;
+  role?: AdminUserUpdateRole;
+  isPro?: boolean;
+}
+
+export interface AdminPlayerUpdate {
+  level?: number;
+  xp?: number;
+  hp?: number;
+  maxHp?: number;
+  gold?: number;
+  strength?: number;
+  endurance?: number;
+  dexterity?: number;
+  faith?: number;
+  avatarClass?: string;
+  equippedSkills?: string[];
+}
+
+export type AdminBossInputDifficulty = typeof AdminBossInputDifficulty[keyof typeof AdminBossInputDifficulty];
+
+
+export const AdminBossInputDifficulty = {
+  easy: 'easy',
+  medium: 'medium',
+  hard: 'hard',
+  legendary: 'legendary',
+} as const;
+
+export interface AdminBossInput {
+  name: string;
+  description?: string;
+  difficulty?: AdminBossInputDifficulty;
+  maxHp?: number;
+  xpReward?: number;
+  goldReward?: number;
+  lootTable?: string[];
+  /** @nullable */
+  imageUrl?: string | null;
+  isCustom?: boolean;
+}
+
+export type AdminItemInputRarity = typeof AdminItemInputRarity[keyof typeof AdminItemInputRarity];
+
+
+export const AdminItemInputRarity = {
+  common: 'common',
+  uncommon: 'uncommon',
+  rare: 'rare',
+  epic: 'epic',
+  legendary: 'legendary',
+} as const;
+
+export type AdminItemInputType = typeof AdminItemInputType[keyof typeof AdminItemInputType];
+
+
+export const AdminItemInputType = {
+  weapon: 'weapon',
+  armor: 'armor',
+  accessory: 'accessory',
+  consumable: 'consumable',
+  trophy: 'trophy',
+} as const;
+
+export interface AdminItemInput {
+  userId: string;
+  name: string;
+  description?: string;
+  rarity?: AdminItemInputRarity;
+  type?: AdminItemInputType;
+}
+
+export interface AdminDashboardStats {
+  totalUsers: number;
+  totalPlayers: number;
+  totalGoals: number;
+  totalHabits: number;
+  totalBosses: number;
+  totalItems: number;
+  totalSkills: number;
+  totalChallenges: number;
+  activeBattles: number;
+}
+
+export type AdminDashboardRecentActivityItem = {
+  id: string;
+  type: string;
+  description: string;
+  xpGained: number;
+  timestamp: string;
+  username: string;
+};
+
+export interface AdminDashboard {
+  stats: AdminDashboardStats;
+  recentUsers: AdminUser[];
+  recentActivity: AdminDashboardRecentActivityItem[];
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export type AdminUserListEntryRole = typeof AdminUserListEntryRole[keyof typeof AdminUserListEntryRole];
+
+
+export const AdminUserListEntryRole = {
+  user: 'user',
+  admin: 'admin',
+  moderator: 'moderator',
+} as const;
+
+export interface AdminUserListEntry {
+  id: string;
+  username: string;
+  role: AdminUserListEntryRole;
+  isPro: boolean;
+  createdAt: string;
+  level: number;
+  xp: number;
+  gold: number;
+  avatarClass: string;
+}
+
+export interface AdminUserList {
+  users: AdminUserListEntry[];
+  pagination: Pagination;
+}
+
+/**
+ * @nullable
+ */
+export type AdminUserDetailPlayer = {
+  id?: string;
+  userId?: string;
+  level?: number;
+  xp?: number;
+  hp?: number;
+  maxHp?: number;
+  gold?: number;
+  strength?: number;
+  endurance?: number;
+  dexterity?: number;
+  faith?: number;
+  avatarClass?: string;
+  equippedSkills?: string[];
+  createdAt?: string;
+} | null;
+
+export type AdminUserDetailGoalsItem = { [key: string]: unknown };
+
+export type AdminUserDetailHabitsItem = { [key: string]: unknown };
+
+export interface AdminUserDetail {
+  user: AdminUser;
+  /** @nullable */
+  player: AdminUserDetailPlayer;
+  goals: AdminUserDetailGoalsItem[];
+  habits: AdminUserDetailHabitsItem[];
+  items: InventoryItem[];
+  activity: ActivityEntry[];
+}
+
+export interface AdminItemEntry {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  rarity: string;
+  type: string;
+  obtainedAt: string;
+  username: string;
+}
+
+export interface AdminItemList {
+  items: AdminItemEntry[];
+  pagination: Pagination;
+}
+
 export type GetCalendarParams = {
 year: number;
 month: number;
+};
+
+export type AdminListUsersParams = {
+search?: string;
+role?: string;
+page?: number;
+limit?: number;
+};
+
+export type AdminListItemsParams = {
+rarity?: string;
+type?: string;
+page?: number;
+limit?: number;
 };
 

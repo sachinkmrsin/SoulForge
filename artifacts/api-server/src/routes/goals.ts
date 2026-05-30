@@ -64,7 +64,7 @@ router.post("/", requireAuth, async (req, res) => {
 
 router.get("/:goalId", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const goalId = parseInt(req.params.goalId);
+  const goalId = req.params.goalId as string;
   const [goal] = await db.select().from(goals).where(and(eq(goals.id, goalId), eq(goals.userId, user.id)));
   if (!goal) {
     res.status(404).json({ error: "Goal not found" });
@@ -89,7 +89,7 @@ router.get("/:goalId", requireAuth, async (req, res) => {
 
 router.patch("/:goalId", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const goalId = parseInt(req.params.goalId);
+  const goalId = req.params.goalId as string;
   const { title, description, priority, deadline, status } = req.body;
 
   const [existing] = await db.select().from(goals).where(and(eq(goals.id, goalId), eq(goals.userId, user.id)));
@@ -116,14 +116,14 @@ router.patch("/:goalId", requireAuth, async (req, res) => {
 
 router.delete("/:goalId", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const goalId = parseInt(req.params.goalId);
+  const goalId = req.params.goalId as string;
   await db.delete(goals).where(and(eq(goals.id, goalId), eq(goals.userId, user.id)));
   res.json({ message: "Goal deleted" });
 });
 
 router.post("/:goalId/complete", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const goalId = parseInt(req.params.goalId);
+  const goalId = req.params.goalId as string;
   const [goal] = await db.select().from(goals).where(and(eq(goals.id, goalId), eq(goals.userId, user.id)));
   if (!goal) {
     res.status(404).json({ error: "Goal not found" });

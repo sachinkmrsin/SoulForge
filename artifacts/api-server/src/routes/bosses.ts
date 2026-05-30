@@ -56,13 +56,19 @@ router.post("/", requireAuth, async (req, res) => {
 
 router.get("/active", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const [battle] = await db.select().from(bossBattles).where(and(eq(bossBattles.userId, user.id), isNull(bossBattles.defeatedAt)));
-  if (!battle) {
+  const [result] = await db
+    .select({
+      battle: bossBattles,
+      boss: bosses,
+    })
+    .from(bossBattles)
+    .innerJoin(bosses, eq(bossBattles.bossId, bosses.id))
+    .where(and(eq(bossBattles.userId, user.id), isNull(bossBattles.defeatedAt)));
+  if (!result) {
     res.status(404).json({ error: "No active boss battle" });
     return;
   }
-  const [boss] = await db.select().from(bosses).where(eq(bosses.id, battle.bossId));
-  res.json(formatBattle(battle, boss));
+  res.json(formatBattle(result.battle, result.boss));
 });
 
 router.post("/active/attack", requireAuth, async (req, res) => {
@@ -130,25 +136,27 @@ router.post("/active/attack", requireAuth, async (req, res) => {
 
 router.get("/history", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const history = await db.select().from(bossBattles).where(and(eq(bossBattles.userId, user.id), isNotNull(bossBattles.defeatedAt)));
-  const result = await Promise.all(
-    history.map(async (battle) => {
-      const [boss] = await db.select().from(bosses).where(eq(bosses.id, battle.bossId));
-      return {
-        id: battle.id,
-        boss: formatBoss(boss),
-        defeatedAt: battle.defeatedAt!.toISOString(),
-        xpEarned: battle.xpEarned,
-        goldEarned: battle.goldEarned,
-      };
+  const history = await db
+    .select({
+      battle: bossBattles,
+      boss: bosses,
     })
-  );
+    .from(bossBattles)
+    .innerJoin(bosses, eq(bossBattles.bossId, bosses.id))
+    .where(and(eq(bossBattles.userId, user.id), isNotNull(bossBattles.defeatedAt)));
+  const result = history.map(({ battle, boss }) => ({
+    id: battle.id,
+    boss: formatBoss(boss),
+    defeatedAt: battle.defeatedAt!.toISOString(),
+    xpEarned: battle.xpEarned,
+    goldEarned: battle.goldEarned,
+  }));
   res.json(result);
 });
 
 router.post("/:bossId/challenge", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const bossId = parseInt(req.params.bossId);
+  const bossId = req.params.bossId as string;
 
   // Check no active battle
   const [existing] = await db.select().from(bossBattles).where(and(eq(bossBattles.userId, user.id), isNull(bossBattles.defeatedAt)));

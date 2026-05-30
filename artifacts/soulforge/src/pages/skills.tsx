@@ -13,15 +13,14 @@ export function Skills() {
   const unequipSkill = useUnequipSkill();
   const queryClient = useQueryClient();
 
-  const handleToggleEquip = async (skillId: number, isEquipped: boolean) => {
+  const handleToggleEquip = async (skillId: string, isEquipped: boolean) => {
     if (isEquipped) {
-      await unequipSkill.mutateAsync({ id: skillId });
+      await unequipSkill.mutateAsync({ skillId });
     } else {
       if (player && player.equippedSkills.length >= 3) {
-        // Handle max equipped skills limit (would show toast in real app)
         return;
       }
-      await equipSkill.mutateAsync({ id: skillId });
+      await equipSkill.mutateAsync({ skillId });
     }
     queryClient.invalidateQueries({ queryKey: getListSkillsQueryKey() });
     queryClient.invalidateQueries({ queryKey: getGetPlayerQueryKey() });

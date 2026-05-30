@@ -27,14 +27,14 @@ export function Goals() {
     queryClient.invalidateQueries({ queryKey: getListGoalsQueryKey() });
   };
 
-  const handleToggle = async (id: number, currentStatus: GoalStatus) => {
+  const handleToggle = async (id: string, currentStatus: GoalStatus) => {
     const newStatus = currentStatus === 'completed' ? 'active' : 'completed';
-    await updateGoal.mutateAsync({ id, data: { status: newStatus } });
+    await updateGoal.mutateAsync({ goalId: id, data: { status: newStatus } });
     queryClient.invalidateQueries({ queryKey: getListGoalsQueryKey() });
   };
 
-  const handleDelete = async (id: number) => {
-    await deleteGoal.mutateAsync({ id });
+  const handleDelete = async (id: string) => {
+    await deleteGoal.mutateAsync({ goalId: id });
     queryClient.invalidateQueries({ queryKey: getListGoalsQueryKey() });
   };
 

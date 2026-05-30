@@ -47,8 +47,9 @@ export const LoginBody = zod.object({
 
 export const LoginResponse = zod.object({
   "user": zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "username": zod.string(),
+  "role": zod.enum(['user', 'admin', 'moderator']),
   "createdAt": zod.string(),
   "isPro": zod.boolean()
 }),
@@ -68,8 +69,9 @@ export const LogoutResponse = zod.object({
  * @summary Get current user
  */
 export const GetMeResponse = zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "username": zod.string(),
+  "role": zod.enum(['user', 'admin', 'moderator']),
   "createdAt": zod.string(),
   "isPro": zod.boolean()
 })
@@ -79,8 +81,8 @@ export const GetMeResponse = zod.object({
  * @summary Get player profile
  */
 export const GetPlayerResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -106,8 +108,8 @@ export const UpdatePlayerBody = zod.object({
 })
 
 export const UpdatePlayerResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -133,8 +135,8 @@ export const UpdatePlayerAvatarBody = zod.object({
 })
 
 export const UpdatePlayerAvatarResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -156,8 +158,8 @@ export const UpdatePlayerAvatarResponse = zod.object({
  * @summary List all goals
  */
 export const ListGoalsResponseItem = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "status": zod.enum(['active', 'completed', 'abandoned']),
@@ -191,12 +193,12 @@ export const CreateGoalBody = zod.object({
  * @summary Get a goal by ID
  */
 export const GetGoalParams = zod.object({
-  "goalId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid()
 })
 
 export const GetGoalResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "status": zod.enum(['active', 'completed', 'abandoned']),
@@ -206,9 +208,9 @@ export const GetGoalResponse = zod.object({
   "createdAt": zod.string(),
   "completedAt": zod.string().nullable(),
   "subtasks": zod.array(zod.object({
-  "id": zod.number(),
-  "goalId": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "goalId": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "completed": zod.boolean(),
   "xpReward": zod.number(),
@@ -222,7 +224,7 @@ export const GetGoalResponse = zod.object({
  * @summary Update a goal
  */
 export const UpdateGoalParams = zod.object({
-  "goalId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid()
 })
 
 export const UpdateGoalBody = zod.object({
@@ -234,8 +236,8 @@ export const UpdateGoalBody = zod.object({
 })
 
 export const UpdateGoalResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "status": zod.enum(['active', 'completed', 'abandoned']),
@@ -253,7 +255,7 @@ export const UpdateGoalResponse = zod.object({
  * @summary Delete a goal
  */
 export const DeleteGoalParams = zod.object({
-  "goalId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid()
 })
 
 export const DeleteGoalResponse = zod.object({
@@ -265,14 +267,14 @@ export const DeleteGoalResponse = zod.object({
  * @summary Mark goal as complete (awards XP)
  */
 export const CompleteGoalParams = zod.object({
-  "goalId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid()
 })
 
 export const CompleteGoalResponse = zod.object({
   "xpGained": zod.number(),
   "player": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -291,8 +293,8 @@ export const CompleteGoalResponse = zod.object({
   "leveledUp": zod.boolean(),
   "bossHpReduced": zod.number().nullish(),
   "loot": zod.array(zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
@@ -306,13 +308,13 @@ export const CompleteGoalResponse = zod.object({
  * @summary List subtasks for a goal
  */
 export const ListSubtasksParams = zod.object({
-  "goalId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid()
 })
 
 export const ListSubtasksResponseItem = zod.object({
-  "id": zod.number(),
-  "goalId": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "goalId": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "completed": zod.boolean(),
   "xpReward": zod.number(),
@@ -326,7 +328,7 @@ export const ListSubtasksResponse = zod.array(ListSubtasksResponseItem)
  * @summary Create a subtask
  */
 export const CreateSubtaskParams = zod.object({
-  "goalId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid()
 })
 
 
@@ -342,8 +344,8 @@ export const CreateSubtaskBody = zod.object({
  * @summary Update a subtask
  */
 export const UpdateSubtaskParams = zod.object({
-  "goalId": zod.coerce.number(),
-  "subtaskId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid(),
+  "subtaskId": zod.coerce.string().uuid()
 })
 
 export const UpdateSubtaskBody = zod.object({
@@ -352,9 +354,9 @@ export const UpdateSubtaskBody = zod.object({
 })
 
 export const UpdateSubtaskResponse = zod.object({
-  "id": zod.number(),
-  "goalId": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "goalId": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "completed": zod.boolean(),
   "xpReward": zod.number(),
@@ -367,8 +369,8 @@ export const UpdateSubtaskResponse = zod.object({
  * @summary Delete a subtask
  */
 export const DeleteSubtaskParams = zod.object({
-  "goalId": zod.coerce.number(),
-  "subtaskId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid(),
+  "subtaskId": zod.coerce.string().uuid()
 })
 
 export const DeleteSubtaskResponse = zod.object({
@@ -380,15 +382,15 @@ export const DeleteSubtaskResponse = zod.object({
  * @summary Complete a subtask (awards XP, damages boss)
  */
 export const CompleteSubtaskParams = zod.object({
-  "goalId": zod.coerce.number(),
-  "subtaskId": zod.coerce.number()
+  "goalId": zod.coerce.string().uuid(),
+  "subtaskId": zod.coerce.string().uuid()
 })
 
 export const CompleteSubtaskResponse = zod.object({
   "xpGained": zod.number(),
   "player": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -407,8 +409,8 @@ export const CompleteSubtaskResponse = zod.object({
   "leveledUp": zod.boolean(),
   "bossHpReduced": zod.number().nullish(),
   "loot": zod.array(zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
@@ -422,8 +424,8 @@ export const CompleteSubtaskResponse = zod.object({
  * @summary List habits sorted by time of day
  */
 export const ListHabitsResponseItem = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "frequency": zod.enum(['daily', 'weekly']),
@@ -456,7 +458,7 @@ export const CreateHabitBody = zod.object({
  * @summary Update a habit
  */
 export const UpdateHabitParams = zod.object({
-  "habitId": zod.coerce.number()
+  "habitId": zod.coerce.string().uuid()
 })
 
 export const UpdateHabitBody = zod.object({
@@ -468,8 +470,8 @@ export const UpdateHabitBody = zod.object({
 })
 
 export const UpdateHabitResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "title": zod.string(),
   "description": zod.string().nullable(),
   "frequency": zod.enum(['daily', 'weekly']),
@@ -486,7 +488,7 @@ export const UpdateHabitResponse = zod.object({
  * @summary Delete a habit
  */
 export const DeleteHabitParams = zod.object({
-  "habitId": zod.coerce.number()
+  "habitId": zod.coerce.string().uuid()
 })
 
 export const DeleteHabitResponse = zod.object({
@@ -498,14 +500,14 @@ export const DeleteHabitResponse = zod.object({
  * @summary Check in a habit for today (awards XP, damages boss)
  */
 export const CheckinHabitParams = zod.object({
-  "habitId": zod.coerce.number()
+  "habitId": zod.coerce.string().uuid()
 })
 
 export const CheckinHabitResponse = zod.object({
   "xpGained": zod.number(),
   "player": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -524,8 +526,8 @@ export const CheckinHabitResponse = zod.object({
   "leveledUp": zod.boolean(),
   "bossHpReduced": zod.number().nullish(),
   "loot": zod.array(zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
@@ -539,7 +541,7 @@ export const CheckinHabitResponse = zod.object({
  * @summary List available bosses
  */
 export const ListBossesResponseItem = zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
@@ -574,10 +576,10 @@ export const CreateCustomBossBody = zod.object({
  * @summary Get currently challenged boss
  */
 export const GetActiveBossResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "boss": zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
@@ -601,10 +603,10 @@ export const GetActiveBossResponse = zod.object({
 export const AttackBossResponse = zod.object({
   "damage": zod.number(),
   "bossBattle": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "boss": zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
@@ -622,8 +624,8 @@ export const AttackBossResponse = zod.object({
 }),
   "bossDefeated": zod.boolean(),
   "loot": zod.array(zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
@@ -632,8 +634,8 @@ export const AttackBossResponse = zod.object({
 })),
   "xpGained": zod.number(),
   "player": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -656,9 +658,9 @@ export const AttackBossResponse = zod.object({
  * @summary List defeated bosses
  */
 export const ListBossHistoryResponseItem = zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "boss": zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
@@ -681,14 +683,14 @@ export const ListBossHistoryResponse = zod.array(ListBossHistoryResponseItem)
  * @summary Start challenging a boss
  */
 export const ChallengeBossParams = zod.object({
-  "bossId": zod.coerce.number()
+  "bossId": zod.coerce.string().uuid()
 })
 
 export const ChallengeBossResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "boss": zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
@@ -710,9 +712,9 @@ export const ChallengeBossResponse = zod.object({
  * @summary List AI-generated challenges
  */
 export const ListChallengesResponseItem = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
-  "goalId": zod.number().nullable(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
+  "goalId": zod.string().uuid().nullable(),
   "title": zod.string(),
   "description": zod.string(),
   "duration": zod.enum(['daily', 'weekly', 'monthly']),
@@ -729,7 +731,7 @@ export const ListChallengesResponse = zod.array(ListChallengesResponseItem)
  * @summary Generate AI challenges for a goal
  */
 export const GenerateChallengesBody = zod.object({
-  "goalId": zod.number(),
+  "goalId": zod.string().uuid(),
   "duration": zod.enum(['daily', 'weekly', 'monthly']),
   "count": zod.number().optional()
 })
@@ -739,7 +741,7 @@ export const GenerateChallengesBody = zod.object({
  * @summary Update a challenge
  */
 export const UpdateChallengeParams = zod.object({
-  "challengeId": zod.coerce.number()
+  "challengeId": zod.coerce.string().uuid()
 })
 
 export const UpdateChallengeBody = zod.object({
@@ -747,9 +749,9 @@ export const UpdateChallengeBody = zod.object({
 })
 
 export const UpdateChallengeResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
-  "goalId": zod.number().nullable(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
+  "goalId": zod.string().uuid().nullable(),
   "title": zod.string(),
   "description": zod.string(),
   "duration": zod.enum(['daily', 'weekly', 'monthly']),
@@ -765,14 +767,14 @@ export const UpdateChallengeResponse = zod.object({
  * @summary Complete a challenge (awards bonus XP)
  */
 export const CompleteChallengeParams = zod.object({
-  "challengeId": zod.coerce.number()
+  "challengeId": zod.coerce.string().uuid()
 })
 
 export const CompleteChallengeResponse = zod.object({
   "xpGained": zod.number(),
   "player": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -791,8 +793,8 @@ export const CompleteChallengeResponse = zod.object({
   "leveledUp": zod.boolean(),
   "bossHpReduced": zod.number().nullish(),
   "loot": zod.array(zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
@@ -806,8 +808,8 @@ export const CompleteChallengeResponse = zod.object({
  * @summary Get player inventory
  */
 export const ListInventoryResponseItem = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
@@ -821,7 +823,7 @@ export const ListInventoryResponse = zod.array(ListInventoryResponseItem)
  * @summary Discard an inventory item
  */
 export const DiscardItemParams = zod.object({
-  "itemId": zod.coerce.number()
+  "itemId": zod.coerce.string().uuid()
 })
 
 export const DiscardItemResponse = zod.object({
@@ -833,7 +835,7 @@ export const DiscardItemResponse = zod.object({
  * @summary List all skills (unlocked by level)
  */
 export const ListSkillsResponseItem = zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "effect": zod.string(),
@@ -848,12 +850,12 @@ export const ListSkillsResponse = zod.array(ListSkillsResponseItem)
  * @summary Equip a skill
  */
 export const EquipSkillParams = zod.object({
-  "skillId": zod.coerce.number()
+  "skillId": zod.coerce.string().uuid()
 })
 
 export const EquipSkillResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -875,12 +877,12 @@ export const EquipSkillResponse = zod.object({
  * @summary Unequip a skill
  */
 export const UnequipSkillParams = zod.object({
-  "skillId": zod.coerce.number()
+  "skillId": zod.coerce.string().uuid()
 })
 
 export const UnequipSkillResponse = zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -939,8 +941,8 @@ export const GetCalendarDayResponse = zod.object({
  */
 export const GetDashboardSummaryResponse = zod.object({
   "player": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "username": zod.string(),
   "level": zod.number(),
   "xp": zod.number(),
@@ -957,10 +959,10 @@ export const GetDashboardSummaryResponse = zod.object({
   "createdAt": zod.string()
 }),
   "activeBoss": zod.object({
-  "id": zod.number(),
-  "userId": zod.number(),
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
   "boss": zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "name": zod.string(),
   "description": zod.string(),
   "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
@@ -984,7 +986,7 @@ export const GetDashboardSummaryResponse = zod.object({
   "habitsCompletedToday": zod.number(),
   "habitsTotal": zod.number(),
   "recentActivity": zod.array(zod.object({
-  "id": zod.number(),
+  "id": zod.string().uuid(),
   "type": zod.string(),
   "description": zod.string(),
   "xpGained": zod.number(),
@@ -1011,6 +1013,395 @@ export const GetLeaderboardResponse = zod.object({
   "xp": zod.number().optional(),
   "avatarClass": zod.string().optional()
 }).nullable()
+})
+
+
+/**
+ * @summary Get admin dashboard stats
+ */
+export const AdminGetDashboardResponse = zod.object({
+  "stats": zod.object({
+  "totalUsers": zod.number(),
+  "totalPlayers": zod.number(),
+  "totalGoals": zod.number(),
+  "totalHabits": zod.number(),
+  "totalBosses": zod.number(),
+  "totalItems": zod.number(),
+  "totalSkills": zod.number(),
+  "totalChallenges": zod.number(),
+  "activeBattles": zod.number()
+}),
+  "recentUsers": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "username": zod.string(),
+  "role": zod.enum(['user', 'admin', 'moderator']),
+  "isPro": zod.boolean(),
+  "createdAt": zod.string()
+})),
+  "recentActivity": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "type": zod.string(),
+  "description": zod.string(),
+  "xpGained": zod.number(),
+  "timestamp": zod.string(),
+  "username": zod.string()
+}))
+})
+
+
+/**
+ * @summary List all users with pagination
+ */
+export const AdminListUsersQueryParams = zod.object({
+  "search": zod.coerce.string().optional(),
+  "role": zod.coerce.string().optional(),
+  "page": zod.coerce.number().optional(),
+  "limit": zod.coerce.number().optional()
+})
+
+export const AdminListUsersResponse = zod.object({
+  "users": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "username": zod.string(),
+  "role": zod.enum(['user', 'admin', 'moderator']),
+  "isPro": zod.boolean(),
+  "createdAt": zod.string(),
+  "level": zod.number(),
+  "xp": zod.number(),
+  "gold": zod.number(),
+  "avatarClass": zod.string()
+})),
+  "pagination": zod.object({
+  "page": zod.number(),
+  "limit": zod.number(),
+  "total": zod.number(),
+  "totalPages": zod.number()
+})
+})
+
+
+/**
+ * @summary Get user details with player profile
+ */
+export const AdminGetUserParams = zod.object({
+  "userId": zod.coerce.string().uuid()
+})
+
+export const AdminGetUserResponse = zod.object({
+  "user": zod.object({
+  "id": zod.string().uuid(),
+  "username": zod.string(),
+  "role": zod.enum(['user', 'admin', 'moderator']),
+  "isPro": zod.boolean(),
+  "createdAt": zod.string()
+}),
+  "player": zod.object({
+  "id": zod.string().uuid().optional(),
+  "userId": zod.string().uuid().optional(),
+  "level": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "hp": zod.number().optional(),
+  "maxHp": zod.number().optional(),
+  "gold": zod.number().optional(),
+  "strength": zod.number().optional(),
+  "endurance": zod.number().optional(),
+  "dexterity": zod.number().optional(),
+  "faith": zod.number().optional(),
+  "avatarClass": zod.string().optional(),
+  "equippedSkills": zod.array(zod.string()).optional(),
+  "createdAt": zod.string().optional()
+}).nullable(),
+  "goals": zod.array(zod.object({
+
+}).passthrough()),
+  "habits": zod.array(zod.object({
+
+}).passthrough()),
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']),
+  "type": zod.enum(['weapon', 'armor', 'accessory', 'consumable', 'trophy']),
+  "obtainedAt": zod.string()
+})),
+  "activity": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "type": zod.string(),
+  "description": zod.string(),
+  "xpGained": zod.number(),
+  "timestamp": zod.string()
+}))
+})
+
+
+/**
+ * @summary Update user (role, isPro, username)
+ */
+export const AdminUpdateUserParams = zod.object({
+  "userId": zod.coerce.string().uuid()
+})
+
+export const AdminUpdateUserBody = zod.object({
+  "username": zod.string().optional(),
+  "role": zod.enum(['user', 'admin', 'moderator']).optional(),
+  "isPro": zod.boolean().optional()
+})
+
+export const AdminUpdateUserResponse = zod.object({
+  "id": zod.string().uuid(),
+  "username": zod.string(),
+  "role": zod.enum(['user', 'admin', 'moderator']),
+  "isPro": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a user
+ */
+export const AdminDeleteUserParams = zod.object({
+  "userId": zod.coerce.string().uuid()
+})
+
+export const AdminDeleteUserResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Edit player stats
+ */
+export const AdminUpdatePlayerParams = zod.object({
+  "userId": zod.coerce.string().uuid()
+})
+
+export const AdminUpdatePlayerBody = zod.object({
+  "level": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "hp": zod.number().optional(),
+  "maxHp": zod.number().optional(),
+  "gold": zod.number().optional(),
+  "strength": zod.number().optional(),
+  "endurance": zod.number().optional(),
+  "dexterity": zod.number().optional(),
+  "faith": zod.number().optional(),
+  "avatarClass": zod.string().optional(),
+  "equippedSkills": zod.array(zod.string()).optional()
+})
+
+export const AdminUpdatePlayerResponse = zod.object({
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
+  "username": zod.string(),
+  "level": zod.number(),
+  "xp": zod.number(),
+  "xpToNextLevel": zod.number(),
+  "hp": zod.number(),
+  "maxHp": zod.number(),
+  "gold": zod.number(),
+  "strength": zod.number(),
+  "endurance": zod.number(),
+  "dexterity": zod.number(),
+  "faith": zod.number(),
+  "avatarClass": zod.string(),
+  "equippedSkills": zod.array(zod.string()),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary List all bosses
+ */
+export const AdminListBossesResponseItem = zod.object({
+  "id": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
+  "maxHp": zod.number(),
+  "xpReward": zod.number(),
+  "goldReward": zod.number(),
+  "lootTable": zod.array(zod.string()),
+  "imageUrl": zod.string().nullable(),
+  "isCustom": zod.boolean(),
+  "createdAt": zod.string()
+})
+export const AdminListBossesResponse = zod.array(AdminListBossesResponseItem)
+
+
+/**
+ * @summary Create a boss
+ */
+export const AdminCreateBossBody = zod.object({
+  "name": zod.string(),
+  "description": zod.string().optional(),
+  "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']).optional(),
+  "maxHp": zod.number().optional(),
+  "xpReward": zod.number().optional(),
+  "goldReward": zod.number().optional(),
+  "lootTable": zod.array(zod.string()).optional(),
+  "imageUrl": zod.string().nullish(),
+  "isCustom": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Update a boss
+ */
+export const AdminUpdateBossParams = zod.object({
+  "bossId": zod.coerce.string().uuid()
+})
+
+export const AdminUpdateBossBody = zod.object({
+  "name": zod.string(),
+  "description": zod.string().optional(),
+  "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']).optional(),
+  "maxHp": zod.number().optional(),
+  "xpReward": zod.number().optional(),
+  "goldReward": zod.number().optional(),
+  "lootTable": zod.array(zod.string()).optional(),
+  "imageUrl": zod.string().nullish(),
+  "isCustom": zod.boolean().optional()
+})
+
+export const AdminUpdateBossResponse = zod.object({
+  "id": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "difficulty": zod.enum(['easy', 'medium', 'hard', 'legendary']),
+  "maxHp": zod.number(),
+  "xpReward": zod.number(),
+  "goldReward": zod.number(),
+  "lootTable": zod.array(zod.string()),
+  "imageUrl": zod.string().nullable(),
+  "isCustom": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a boss
+ */
+export const AdminDeleteBossParams = zod.object({
+  "bossId": zod.coerce.string().uuid()
+})
+
+export const AdminDeleteBossResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary List all skill definitions
+ */
+export const AdminListSkillsResponseItem = zod.object({
+  "id": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "effect": zod.string(),
+  "levelRequired": zod.number()
+})
+export const AdminListSkillsResponse = zod.array(AdminListSkillsResponseItem)
+
+
+/**
+ * @summary Create a skill definition
+ */
+export const AdminCreateSkillBody = zod.object({
+  "name": zod.string(),
+  "description": zod.string().optional(),
+  "effect": zod.string().optional(),
+  "levelRequired": zod.number().optional()
+})
+
+
+/**
+ * @summary Update a skill definition
+ */
+export const AdminUpdateSkillParams = zod.object({
+  "skillId": zod.coerce.string().uuid()
+})
+
+export const AdminUpdateSkillBody = zod.object({
+  "name": zod.string(),
+  "description": zod.string().optional(),
+  "effect": zod.string().optional(),
+  "levelRequired": zod.number().optional()
+})
+
+export const AdminUpdateSkillResponse = zod.object({
+  "id": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "effect": zod.string(),
+  "levelRequired": zod.number()
+})
+
+
+/**
+ * @summary Delete a skill definition
+ */
+export const AdminDeleteSkillParams = zod.object({
+  "skillId": zod.coerce.string().uuid()
+})
+
+export const AdminDeleteSkillResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary List all inventory items
+ */
+export const AdminListItemsQueryParams = zod.object({
+  "rarity": zod.coerce.string().optional(),
+  "type": zod.coerce.string().optional(),
+  "page": zod.coerce.number().optional(),
+  "limit": zod.coerce.number().optional()
+})
+
+export const AdminListItemsResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "userId": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "rarity": zod.string(),
+  "type": zod.string(),
+  "obtainedAt": zod.string(),
+  "username": zod.string()
+})),
+  "pagination": zod.object({
+  "page": zod.number(),
+  "limit": zod.number(),
+  "total": zod.number(),
+  "totalPages": zod.number()
+})
+})
+
+
+/**
+ * @summary Grant an item to a user
+ */
+export const AdminCreateItemBody = zod.object({
+  "userId": zod.string().uuid(),
+  "name": zod.string(),
+  "description": zod.string().optional(),
+  "rarity": zod.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']).optional(),
+  "type": zod.enum(['weapon', 'armor', 'accessory', 'consumable', 'trophy']).optional()
+})
+
+
+/**
+ * @summary Delete an inventory item
+ */
+export const AdminDeleteItemParams = zod.object({
+  "itemId": zod.coerce.string().uuid()
+})
+
+export const AdminDeleteItemResponse = zod.object({
+  "message": zod.string()
 })
 
 

@@ -56,7 +56,7 @@ router.post("/", requireAuth, async (req, res) => {
 
 router.patch("/:habitId", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const habitId = parseInt(req.params.habitId);
+  const habitId = req.params.habitId as string;
   const { title, description, frequency, timeOfDay, xpReward } = req.body;
   const [updated] = await db
     .update(habits)
@@ -74,14 +74,14 @@ router.patch("/:habitId", requireAuth, async (req, res) => {
 
 router.delete("/:habitId", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const habitId = parseInt(req.params.habitId);
+  const habitId = req.params.habitId as string;
   await db.delete(habits).where(and(eq(habits.id, habitId), eq(habits.userId, user.id)));
   res.json({ message: "Habit deleted" });
 });
 
 router.post("/:habitId/checkin", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const habitId = parseInt(req.params.habitId);
+  const habitId = req.params.habitId as string;
   const [habit] = await db.select().from(habits).where(and(eq(habits.id, habitId), eq(habits.userId, user.id)));
   if (!habit) {
     res.status(404).json({ error: "Habit not found" });

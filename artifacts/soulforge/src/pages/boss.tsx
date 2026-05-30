@@ -17,7 +17,7 @@ export function Boss() {
   const handleAttack = async () => {
     if (!activeBoss) return;
     try {
-      const result = await attackBoss.mutateAsync({ id: activeBoss.id });
+      const result = await attackBoss.mutateAsync();
       setDamageText(result.damage);
       setTimeout(() => setDamageText(null), 1000);
       queryClient.invalidateQueries({ queryKey: getGetActiveBossQueryKey() });
