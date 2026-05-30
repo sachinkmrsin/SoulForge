@@ -516,6 +516,31 @@ export interface DashboardSummary {
   recentActivity: ActivityEntry[];
 }
 
+export interface LeaderboardEntry {
+  rank: number;
+  username: string;
+  level: number;
+  xp: number;
+  avatarClass: string;
+}
+
+/**
+ * @nullable
+ */
+export type LeaderboardResponseCurrentRank = {
+  rank?: number;
+  username?: string;
+  level?: number;
+  xp?: number;
+  avatarClass?: string;
+} | null;
+
+export interface LeaderboardResponse {
+  entries: LeaderboardEntry[];
+  /** @nullable */
+  currentRank: LeaderboardResponseCurrentRank;
+}
+
 export type GetCalendarParams = {
 year: number;
 month: number;

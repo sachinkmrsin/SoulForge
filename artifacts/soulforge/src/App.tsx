@@ -16,6 +16,7 @@ import { Inventory } from "@/pages/inventory";
 import { Skills } from "@/pages/skills";
 import { Calendar } from "@/pages/calendar";
 import { Profile } from "@/pages/profile";
+import { Leaderboard } from "@/pages/leaderboard";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/challenges"><ProtectedRoute component={Challenges} /></Route>
       <Route path="/inventory"><ProtectedRoute component={Inventory} /></Route>
       <Route path="/skills"><ProtectedRoute component={Skills} /></Route>
+      <Route path="/leaderboard"><ProtectedRoute component={Leaderboard} /></Route>
       <Route path="/calendar"><ProtectedRoute component={Calendar} /></Route>
       <Route path="/profile"><ProtectedRoute component={Profile} /></Route>
       

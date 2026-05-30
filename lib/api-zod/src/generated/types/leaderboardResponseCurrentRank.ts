@@ -6,6 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface PlayerUpdate {
+/**
+ * @nullable
+ */
+export type LeaderboardResponseCurrentRank = {
+  rank?: number;
   username?: string;
-}
+  level?: number;
+  xp?: number;
+  avatarClass?: string;
+} | null;

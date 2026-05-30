@@ -31,6 +31,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     { href: '/challenges', label: 'Trials', icon: Swords },
     { href: '/inventory', label: 'Inventory', icon: Backpack },
     { href: '/skills', label: 'Skills', icon: Sparkles },
+    { href: '/leaderboard', label: 'Hall of Champions', icon: Trophy },
     { href: '/calendar', label: 'Chronicles', icon: Calendar },
     { href: '/profile', label: 'Character', icon: User },
   ];

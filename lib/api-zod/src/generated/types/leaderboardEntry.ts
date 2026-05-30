@@ -6,6 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface AvatarUpdate {
+export interface LeaderboardEntry {
+  rank: number;
+  username: string;
+  level: number;
+  xp: number;
   avatarClass: string;
 }

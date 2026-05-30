@@ -993,3 +993,24 @@ export const GetDashboardSummaryResponse = zod.object({
 })
 
 
+/**
+ * @summary Get top players ranked by level and XP
+ */
+export const GetLeaderboardResponse = zod.object({
+  "entries": zod.array(zod.object({
+  "rank": zod.number(),
+  "username": zod.string(),
+  "level": zod.number(),
+  "xp": zod.number(),
+  "avatarClass": zod.string()
+})),
+  "currentRank": zod.object({
+  "rank": zod.number().optional(),
+  "username": zod.string().optional(),
+  "level": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "avatarClass": zod.string().optional()
+}).nullable()
+})
+
+
