@@ -155,24 +155,28 @@ router.get("/history", requireAuth, async (req, res) => {
 });
 
 router.post("/:bossId/challenge", requireAuth, async (req, res) => {
-  const user = (req as any).user;
-  const bossId = req.params.bossId as string;
+  try {
+    const user = (req as any).user;
+    const bossId = req.params.bossId as string;
 
-  // Check no active battle
-  const [existing] = await db.select().from(bossBattles).where(and(eq(bossBattles.userId, user.id), isNull(bossBattles.defeatedAt)));
-  if (existing) {
-    res.status(400).json({ error: "You already have an active boss battle" });
-    return;
+    const [existing] = await db.select().from(bossBattles).where(and(eq(bossBattles.userId, user.id), isNull(bossBattles.defeatedAt)));
+    if (existing) {
+      res.status(400).json({ error: "You already have an active boss battle" });
+      return;
+    }
+
+    const [boss] = await db.select().from(bosses).where(eq(bosses.id, bossId));
+    if (!boss) {
+      res.status(404).json({ error: "Boss not found" });
+      return;
+    }
+
+    const [battle] = await db.insert(bossBattles).values({ userId: user.id, bossId, currentHp: boss.maxHp }).returning();
+    res.json(formatBattle(battle, boss));
+  } catch (err) {
+    console.error("POST /bosses/:bossId/challenge error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  const [boss] = await db.select().from(bosses).where(eq(bosses.id, bossId));
-  if (!boss) {
-    res.status(404).json({ error: "Boss not found" });
-    return;
-  }
-
-  const [battle] = await db.insert(bossBattles).values({ userId: user.id, bossId, currentHp: boss.maxHp }).returning();
-  res.json(formatBattle(battle, boss));
 });
 
 export default router;

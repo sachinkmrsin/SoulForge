@@ -6,6 +6,20 @@ pnpm workspace monorepo · Node 24 · TypeScript 5.9 · Express 5 · React 19.1.
 
 ## Commands
 
+Docker is the intended runtime (compose files own Postgres, the DB push, and both apps):
+
+```bash
+pnpm run docker:dev        # docker-compose.dev.yml: postgres + db-push + api (5000) + vite (3000)
+pnpm run docker:dev:watch  # same, with sync+restart file watching (needs compose watch)
+pnpm run docker:dev:logs   # tail dev logs
+pnpm run docker:dev:down   # stop dev stack
+pnpm run docker:up         # docker-compose.yml: production builds (nginx + node)
+pnpm run docker:logs       # tail production logs
+pnpm run docker:down       # stop production stack
+```
+
+Host-side pnpm commands (need a reachable Postgres + `DATABASE_URL`):
+
 ```bash
 pnpm --filter @workspace/api-server run dev   # API server (port 5000)
 pnpm --filter @workspace/soulforge run dev     # Frontend (port 3000, proxies /api → :5000)
@@ -46,6 +60,6 @@ No test runner or linter configured beyond Prettier.
 - API server `dev` script runs build then start (not a watcher) — restart manually on changes
 - Frontend dev server proxies `/api` to `API_URL` (default `http://localhost:5000`); in Docker uses `http://api-server:5000`
 - `DATABASE_URL` env var required for any DB operation (drizzle.config.ts throws without it)
-- Post-merge hook (`scripts/post-merge.sh`) auto-runs `pnpm install --frozen-lockfile` + `pnpm --filter db push`
+- Run `scripts/post-merge.sh` manually after pulling (`pnpm install --frozen-lockfile` + `pnpm --filter db push`)
 - `.env` is gitignored; see `.env.docker` for Docker Compose variable reference
 - esbuild externalizes many native/platform packages — add to the external list if bundling fails on a new dependency

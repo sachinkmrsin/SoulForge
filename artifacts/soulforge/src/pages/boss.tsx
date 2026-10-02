@@ -1,18 +1,30 @@
 import React from 'react';
-import { useGetActiveBoss, useListBosses, useAttackBoss } from '@workspace/api-client-react';
+import { useGetActiveBoss, useListBosses, useAttackBoss, useChallengeBoss } from '@workspace/api-client-react';
 import { MainLayout } from '@/components/layout';
 import { Flame, Skull, Sword, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useQueryClient } from '@tanstack/react-query';
-import { getGetActiveBossQueryKey, getGetDashboardSummaryQueryKey } from '@workspace/api-client-react';
+import { getGetActiveBossQueryKey, getGetDashboardSummaryQueryKey, getListBossesQueryKey } from '@workspace/api-client-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Boss() {
-  const { data: activeBoss, isLoading: activeLoading } = useGetActiveBoss();
+  const { data: activeBoss, isLoading: activeLoading, isError: activeError } = useGetActiveBoss({ query: { retry: false } });
   const { data: bosses = [], isLoading: bossesLoading } = useListBosses();
   const attackBoss = useAttackBoss();
+  const challengeBoss = useChallengeBoss();
   const queryClient = useQueryClient();
   const [damageText, setDamageText] = React.useState<number | null>(null);
+
+  const handleChallenge = async (bossId: string) => {
+    try {
+      await challengeBoss.mutateAsync({ bossId });
+      queryClient.invalidateQueries({ queryKey: getGetActiveBossQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getListBossesQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getGetDashboardSummaryQueryKey() });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleAttack = async () => {
     if (!activeBoss) return;
@@ -115,7 +127,11 @@ export function Boss() {
                     <span className="text-primary">XP: {boss.xpReward}</span>
                   </div>
 
-                  <Button className="w-full bg-secondary hover:bg-destructive text-secondary-foreground hover:text-destructive-foreground rounded-none uppercase tracking-widest font-serif">
+                  <Button
+                    onClick={() => handleChallenge(boss.id)}
+                    disabled={challengeBoss.isPending}
+                    className="w-full bg-secondary hover:bg-destructive text-secondary-foreground hover:text-destructive-foreground rounded-none uppercase tracking-widest font-serif"
+                  >
                     Challenge
                   </Button>
                 </div>
